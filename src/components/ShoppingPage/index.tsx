@@ -2,9 +2,9 @@ import React from "react";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 
-function ShoppingPage({ increment }: { increment: () => void }) {
+function ShoppingPage() {
   return (
-    <Wrapper onClick={increment}>
+    <Wrapper>
       Shopping
       <Link to="/">Back to main</Link>
     </Wrapper>
