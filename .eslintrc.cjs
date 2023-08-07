@@ -1,6 +1,6 @@
 /* eslint-env node */
 module.exports = {
-  extends: ["eslint:recommended", "prettier"],
+  extends: ["react-app", "prettier"],
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint", "prettier"],
   root: true,
@@ -16,6 +16,7 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
+    "react-hooks/exhaustive-deps": "error",
     "prettier/prettier": [
       "error",
       {
