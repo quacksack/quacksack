@@ -4,8 +4,8 @@ import { BagApi, BagError, BagItems } from "./types";
 
 type TokenKey = string;
 
-const TokenToKey = (token: Token): TokenKey => `${token.color}-${token.value}`;
-const KeyToToken = (tokenKey: TokenKey): Token => {
+const tokenToKey = (token: Token): TokenKey => `${token.color}-${token.value}`;
+const keyToToken = (tokenKey: TokenKey): Token => {
   try {
     const split = tokenKey.split("-");
     const color = split[0];
@@ -31,14 +31,14 @@ const sumWeights = (items: { [key: TokenKey]: number }) =>
   Object.entries(items).reduce((acc, curr) => acc + curr[1], 0);
 
 const bagItemsToMap = (items: BagItems | undefined) => {
-  const ret: { [key: TokenKey]: number } = {};
+  const bagMap: { [key: TokenKey]: number } = {};
 
   items?.forEach(([token, count]) => {
-    const tokenKey = TokenToKey(token);
-    ret[tokenKey] = (ret[tokenKey] ?? 0) + count;
+    const tokenKey = tokenToKey(token);
+    bagMap[tokenKey] = (bagMap[tokenKey] ?? 0) + count;
   });
 
-  return ret;
+  return bagMap;
 };
 
 export const useBag = (initialItems?: BagItems): BagApi => {
@@ -61,7 +61,7 @@ export const useBag = (initialItems?: BagItems): BagApi => {
       if (totalWeightCounted >= weightedIndex) {
         setItemsInternal((currentItems) => ({ ...currentItems, [tokenKey]: count - 1 }));
         totalItemCountRef.current -= 1;
-        return KeyToToken(tokenKey);
+        return keyToToken(tokenKey);
       }
     }
 
@@ -78,7 +78,7 @@ export const useBag = (initialItems?: BagItems): BagApi => {
   }, [maybePick]);
 
   const add = useCallback((token: Token, count: number = 1) => {
-    const tokenKey = TokenToKey(token);
+    const tokenKey = tokenToKey(token);
     setItemsInternal((currentItems) => ({ ...currentItems, [tokenKey]: (currentItems[tokenKey] ?? 0) + count }));
     totalItemCountRef.current += count;
   }, []);

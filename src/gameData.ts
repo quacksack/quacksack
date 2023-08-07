@@ -12,7 +12,7 @@ export const ShopData: ReadonlyArray<[TokenColor, ReadonlyArray<TokenValue>]> = 
 ];
 
 export const DefaultBag: ReadonlyArray<[Token, number]> = [
-  [{ color: "white", value: 1 }, 3],
+  [{ color: "white", value: 1 }, 4],
   [{ color: "white", value: 2 }, 2],
   [{ color: "white", value: 3 }, 1],
   [{ color: "orange", value: 1 }, 1],

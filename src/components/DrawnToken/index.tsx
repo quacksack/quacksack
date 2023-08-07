@@ -7,7 +7,7 @@ import TokenIcon from "../TokenIcon";
 const DrawnToken = function ({ token, onRemove }: { token: Token; onRemove: () => void }) {
   return (
     <Wrapper>
-      <TokenIcon color={token.color} value={token.value} />
+      <TokenIcon color={token.color} value={token.value} size="48px" />
       <Button onClick={onRemove} buttonStyle="danger" buttonType="action">
         Put back
       </Button>
