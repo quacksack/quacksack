@@ -10,6 +10,7 @@ export const GameContext = createContext<GameContextType>({
   drawnTokens: [],
   bagTotalItemCount: 0,
   resetGame: () => {},
+  addToBag: () => {},
 });
 GameContext.displayName = "GameContext";
 
@@ -48,8 +49,8 @@ const GameProvider = (props: { children: React.ReactNode }) => {
   }, [bag]);
 
   const contextValue = useMemo(
-    () => ({ draw, drawnTokens, putDrawnBack, bagTotalItemCount: bag.totalItemCount, resetGame }),
-    [bag.totalItemCount, draw, drawnTokens, putDrawnBack, resetGame],
+    () => ({ draw, drawnTokens, putDrawnBack, bagTotalItemCount: bag.totalItemCount, resetGame, addToBag: bag.add }),
+    [bag.add, bag.totalItemCount, draw, drawnTokens, putDrawnBack, resetGame],
   );
   return <GameContext.Provider value={contextValue}>{props.children}</GameContext.Provider>;
 };

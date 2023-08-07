@@ -2,7 +2,7 @@ import React from "react";
 import { Token } from "../../types";
 import COLORS from "../../util/colors";
 
-const TokenIcon = function (props: Token & { size?: React.CSSProperties["width"] }) {
+const TokenIcon = function (props: Token & { size?: React.CSSProperties["width"]; onClick?: () => void }) {
   const size = props.size ?? "64px";
   return (
     <div
@@ -17,6 +17,7 @@ const TokenIcon = function (props: Token & { size?: React.CSSProperties["width"]
         alignItems: "center",
         justifyContent: "center",
       }}
+      onClick={props.onClick}
     >
       {props.value}
     </div>

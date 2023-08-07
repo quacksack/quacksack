@@ -1,15 +1,15 @@
 import { Token, TokenColor, TokenValue } from "./types";
 
-export const TokenAllowedValues: Record<TokenColor, ReadonlyArray<TokenValue>> = {
-  white: [1, 2, 3],
-  red: [1, 2, 4],
-  orange: [1],
-  yellow: [1, 2, 4],
-  green: [1, 2, 4],
-  blue: [1, 2, 4],
-  purple: [1],
-  black: [1],
-};
+export const ShopData: ReadonlyArray<[TokenColor, ReadonlyArray<TokenValue>]> = [
+  ["orange", [1]],
+  ["green", [1, 2, 4]],
+  ["blue", [1, 2, 4]],
+  ["red", [1, 2, 4]],
+  ["black", [1]],
+  ["yellow", [1, 2, 4]],
+  ["purple", [1]],
+  ["white", [1, 2, 3]],
+];
 
 export const DefaultBag: ReadonlyArray<[Token, number]> = [
   [{ color: "white", value: 1 }, 3],

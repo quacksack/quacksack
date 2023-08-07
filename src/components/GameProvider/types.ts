@@ -7,6 +7,7 @@ export interface GameContextType {
   drawnTokens: ReadonlyArray<Token>;
   bagTotalItemCount: BagApi["totalItemCount"];
   resetGame: () => void;
+  addToBag: (token: Token) => void;
 }
 
 export type GameState = {
