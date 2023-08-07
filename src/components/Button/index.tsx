@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
 import React, { useCallback, useState, ReactNode } from "react";
 import COLORS from "../../util/colors";
+import { Link } from "react-router-dom";
 
-export type ButtonType = "base" | "carousel" | "action";
+export type ButtonType = "base" | "action";
 export type ButtonStyle = "danger" | "default" | "primary";
 
 export const BaseButton = styled.button({
@@ -18,12 +19,6 @@ export const BaseButton = styled.button({
   appearance: "none",
   [`&[disabled], &[aria-disabled="true"]`]: { opacity: "10%", filter: "grayscale(100%)" },
 });
-
-export const CarouselButton = styled(BaseButton)`
-  min-width: 128px;
-  height: 80px;
-  font-size: 30px;
-`;
 
 export const ActionButton = styled.button<{ buttonStyle?: ButtonStyle }>(({ buttonStyle = "default" }) => {
   const rgbMap: { [k in typeof buttonStyle]: string } = {
@@ -49,11 +44,10 @@ export const ActionButton = styled.button<{ buttonStyle?: ButtonStyle }>(({ butt
   };
 });
 
-type ButtonComponent = typeof BaseButton | typeof CarouselButton | typeof ActionButton;
+type ButtonComponent = typeof BaseButton | typeof ActionButton;
 
 const BUTTON_TYPE_TO_COMPONENT: Record<ButtonType, ButtonComponent> = {
   base: BaseButton,
-  carousel: CarouselButton,
   action: ActionButton,
 };
 
@@ -65,6 +59,7 @@ interface Props {
   buttonStyle?: ButtonStyle;
   shouldConfirm?: boolean;
   isDisabled?: boolean;
+  to?: string;
 }
 
 const Button = ({
@@ -75,6 +70,7 @@ const Button = ({
   buttonStyle = "default",
   shouldConfirm = false,
   isDisabled = false,
+  to,
 }: Props) => {
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
 
@@ -97,7 +93,8 @@ const Button = ({
   }, [isDisabled, shouldConfirm, isConfirming, onClick]);
 
   const ButtonComponent = BUTTON_TYPE_TO_COMPONENT[buttonType];
-  return (
+
+  const renderedButton = (
     <ButtonComponent
       aria-disabled={isDisabled}
       disabled={isDisabled}
@@ -108,6 +105,14 @@ const Button = ({
     >
       {shouldConfirm && isConfirming ? "Confirm" : children}
     </ButtonComponent>
+  );
+
+  return to !== undefined ? (
+    <Link style={{ textDecoration: "none" }} to={to}>
+      {renderedButton}
+    </Link>
+  ) : (
+    renderedButton
   );
 };
 

@@ -1,24 +1,23 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext } from "react";
 import styled from "@emotion/styled";
-import { useBag } from "../useBag";
-import { DefaultBag } from "../../gameData";
 import Button from "../Button";
-import { Token } from "../../types";
+import { GameContext } from "../GameProvider";
 
 function MainPage() {
-  const { pickOrThrow, totalItemCount } = useBag(DefaultBag);
-  const [drawnItems, setDrawnItems] = useState<ReadonlyArray<Token>>([]);
+  const {
+    bag: { pickOrThrow, totalItemCount },
+    drawnTokens: { tokens: drawnTokens, add: addDrawnToken },
+  } = useContext(GameContext);
 
   const onDraw = useCallback(() => {
-    const token = pickOrThrow();
-    setDrawnItems((curr) => [...curr, token]);
-  }, [pickOrThrow]);
+    addDrawnToken(pickOrThrow());
+  }, [addDrawnToken, pickOrThrow]);
 
   return (
     <Wrapper>
       <CurrentDrawStage>
         <ul>
-          {drawnItems.map((token, i) => (
+          {drawnTokens.map((token, i) => (
             <li key={i}>
               {token.color} {token.value}
             </li>
@@ -26,7 +25,10 @@ function MainPage() {
         </ul>
       </CurrentDrawStage>
       <PrimaryActions>
-        <Button onClick={onDraw}>Draw</Button>
+        <Button onClick={onDraw} isDisabled={totalItemCount <= 0}>
+          Draw
+        </Button>
+        <Button to="/shop">Shopping</Button>
       </PrimaryActions>
       <Footer>Tokens: {totalItemCount}</Footer>
     </Wrapper>
@@ -36,6 +38,7 @@ function MainPage() {
 const Wrapper = styled.div({
   display: "flex",
   flexFlow: "column nowrap",
+  justifyContent: "space-between",
   padding: "32px",
   height: "100%",
   width: "100%",
@@ -47,11 +50,14 @@ const CurrentDrawStage = styled.div({
 
 const PrimaryActions = styled.div({
   display: "flex",
+  flexFlow: "column nowrap",
+  gap: "16px",
+  flex: "1 1 auto",
 });
 
 const Footer = styled.footer({
   display: "flex",
-  flex: "1 0 auto",
+  flex: "0 1 auto",
   alignItems: "space",
   justifyContent: "space-between",
   padding: "16px",

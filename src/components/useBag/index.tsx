@@ -1,9 +1,8 @@
 import { useCallback, useRef, useState } from "react";
 import { Token, isTokenColor, isTokenValue } from "../../types";
+import { BagApi, BagError, BagItems } from "./types";
 
 type TokenKey = string;
-
-export class BagError extends Error {}
 
 const TokenToKey = (token: Token): TokenKey => `${token.color}-${token.value}`;
 const KeyToToken = (tokenKey: TokenKey): Token => {
@@ -31,7 +30,7 @@ const KeyToToken = (tokenKey: TokenKey): Token => {
 const sumWeights = (items: { [key: TokenKey]: number }) =>
   Object.entries(items).reduce((acc, curr) => acc + curr[1], 0);
 
-export const useBag = (initialItems?: ReadonlyArray<[Token, number]>) => {
+export const useBag = (initialItems?: BagItems): BagApi => {
   const [items, setItems] = useState<{ [key: TokenKey]: number }>(() => {
     const ret: { [key: TokenKey]: number } = {};
 
