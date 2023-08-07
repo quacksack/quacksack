@@ -34,6 +34,8 @@ const Wrapper = styled.div({
   height: "100%",
   padding: "32px",
   gap: "16px",
+  maxWidth: "540px",
+  margin: "0 auto",
 });
 
 export default App;
