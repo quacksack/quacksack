@@ -5,36 +5,51 @@ import { GameContextType } from "./types";
 import { DefaultBag } from "../../gameData";
 
 export const GameContext = createContext<GameContextType>({
-  drawnTokens: { tokens: [], add: () => {}, removeAtIndex: () => {} },
-  bag: {
-    add: () => {},
-    maybePick: () => null,
-    pickOrThrow: () => {
-      throw new Error("Context not set");
-    },
-    totalItemCount: 0,
-  },
+  draw: () => {},
+  putDrawnBack: () => {},
+  drawnTokens: [],
+  bagTotalItemCount: 0,
+  resetGame: () => {},
 });
 GameContext.displayName = "GameContext";
 
 const GameProvider = (props: { children: React.ReactNode }) => {
   const bag = useBag(DefaultBag);
-  const [drawnItems, setDrawnItems] = useState<ReadonlyArray<Token>>([]);
+  const [drawnTokens, setDrawnTokens] = useState<ReadonlyArray<Token>>([]);
 
-  const addDrawnItem = useCallback((token: Token) => setDrawnItems((current) => [...current, token]), []);
-  const removeDrawnItemAtIndex = useCallback(
-    (index: number) =>
-      setDrawnItems((current) => {
-        const copy = [...current];
-        copy.splice(index, 1);
-        return copy;
-      }),
-    [],
+  const draw = useCallback(() => {
+    const token = bag.pickOrThrow();
+    setDrawnTokens((current) => [...current, token]);
+  }, [bag]);
+
+  const putDrawnBack = useCallback(
+    (index: number | "all") => {
+      if (typeof index === "number") {
+        const copy = [...drawnTokens];
+        const [removed] = copy.splice(index, 1);
+        if (removed === undefined) {
+          throw new Error(`Tried to remove item ${index} from drawn items but it didn't exist`);
+        }
+
+        bag.add(removed);
+
+        setDrawnTokens(copy);
+      } else {
+        drawnTokens.forEach((token) => bag.add(token));
+        setDrawnTokens([]);
+      }
+    },
+    [bag, drawnTokens],
   );
 
+  const resetGame = useCallback(() => {
+    setDrawnTokens([]);
+    bag.setItems(DefaultBag);
+  }, [bag]);
+
   const contextValue = useMemo(
-    () => ({ bag, drawnTokens: { tokens: drawnItems, add: addDrawnItem, removeAtIndex: removeDrawnItemAtIndex } }),
-    [addDrawnItem, bag, drawnItems, removeDrawnItemAtIndex],
+    () => ({ draw, drawnTokens, putDrawnBack, bagTotalItemCount: bag.totalItemCount, resetGame }),
+    [bag.totalItemCount, draw, drawnTokens, putDrawnBack, resetGame],
   );
   return <GameContext.Provider value={contextValue}>{props.children}</GameContext.Provider>;
 };

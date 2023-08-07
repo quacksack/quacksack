@@ -2,15 +2,14 @@ import { Token } from "../../types";
 import { BagApi, BagItems } from "../useBag/types";
 
 export interface GameContextType {
-  drawnTokens: {
-    tokens: ReadonlyArray<Token>;
-    add: (token: Token) => void;
-    removeAtIndex: (index: number) => void;
-  };
-  bag: BagApi;
+  draw: () => void;
+  putDrawnBack: (index: number | "all") => void;
+  drawnTokens: ReadonlyArray<Token>;
+  bagTotalItemCount: BagApi["totalItemCount"];
+  resetGame: () => void;
 }
 
 export type GameState = {
-  drawnTokens: GameContextType["drawnTokens"]["tokens"];
+  drawnTokens: GameContextType["drawnTokens"];
   bagItems: BagItems;
 };

@@ -1,17 +1,10 @@
-import React, { useCallback, useContext } from "react";
+import React, { useContext } from "react";
 import styled from "@emotion/styled";
 import Button from "../Button";
 import { GameContext } from "../GameProvider";
 
 function MainPage() {
-  const {
-    bag: { pickOrThrow, totalItemCount },
-    drawnTokens: { tokens: drawnTokens, add: addDrawnToken },
-  } = useContext(GameContext);
-
-  const onDraw = useCallback(() => {
-    addDrawnToken(pickOrThrow());
-  }, [addDrawnToken, pickOrThrow]);
+  const { draw, putDrawnBack, bagTotalItemCount, drawnTokens, resetGame } = useContext(GameContext);
 
   return (
     <Wrapper>
@@ -20,17 +13,41 @@ function MainPage() {
           {drawnTokens.map((token, i) => (
             <li key={i}>
               {token.color} {token.value}
+              <div
+                style={{
+                  display: "inline-block",
+                  width: "24px",
+                  height: "24px",
+                  backgroundColor: "red",
+                  textAlign: "center",
+                }}
+                onClick={() => {
+                  putDrawnBack(i);
+                }}
+              >
+                ×
+              </div>
             </li>
           ))}
         </ul>
       </CurrentDrawStage>
       <PrimaryActions>
-        <Button onClick={onDraw} isDisabled={totalItemCount <= 0}>
+        <Button onClick={draw} isDisabled={bagTotalItemCount <= 0}>
           Draw
         </Button>
         <Button to="/shop">Shopping</Button>
+        <Button onClick={() => putDrawnBack("all")} isDisabled={drawnTokens.length <= 0}>
+          <span style={{ fontSize: "50px" }}>Put all back</span>
+        </Button>
       </PrimaryActions>
-      <Footer>Tokens: {totalItemCount}</Footer>
+      <Footer>
+        <span>Tokens: {bagTotalItemCount}</span>
+        <span>
+          <Button buttonType="action" buttonStyle="danger" onClick={resetGame} shouldConfirm>
+            Reset game
+          </Button>
+        </span>
+      </Footer>
     </Wrapper>
   );
 }
@@ -58,9 +75,8 @@ const PrimaryActions = styled.div({
 const Footer = styled.footer({
   display: "flex",
   flex: "0 1 auto",
-  alignItems: "space",
+  alignItems: "center",
   justifyContent: "space-between",
-  padding: "16px",
 });
 
 export default MainPage;

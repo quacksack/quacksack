@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Token, isTokenColor, isTokenValue } from "../../types";
 import { BagApi, BagError, BagItems } from "./types";
 
@@ -30,17 +30,19 @@ const KeyToToken = (tokenKey: TokenKey): Token => {
 const sumWeights = (items: { [key: TokenKey]: number }) =>
   Object.entries(items).reduce((acc, curr) => acc + curr[1], 0);
 
-export const useBag = (initialItems?: BagItems): BagApi => {
-  const [items, setItems] = useState<{ [key: TokenKey]: number }>(() => {
-    const ret: { [key: TokenKey]: number } = {};
+const bagItemsToMap = (items: BagItems | undefined) => {
+  const ret: { [key: TokenKey]: number } = {};
 
-    initialItems?.forEach(([token, count]) => {
-      const tokenKey = TokenToKey(token);
-      ret[tokenKey] = (ret[tokenKey] ?? 0) + count;
-    });
-
-    return ret;
+  items?.forEach(([token, count]) => {
+    const tokenKey = TokenToKey(token);
+    ret[tokenKey] = (ret[tokenKey] ?? 0) + count;
   });
+
+  return ret;
+};
+
+export const useBag = (initialItems?: BagItems): BagApi => {
+  const [items, setItemsInternal] = useState<{ [key: TokenKey]: number }>(() => bagItemsToMap(initialItems));
   const totalItemCountRef = useRef<number>(sumWeights(items));
 
   const maybePick = useCallback(() => {
@@ -57,7 +59,7 @@ export const useBag = (initialItems?: BagItems): BagApi => {
       totalWeightCounted += count;
 
       if (totalWeightCounted >= weightedIndex) {
-        setItems((currentItems) => ({ ...currentItems, [tokenKey]: count - 1 }));
+        setItemsInternal((currentItems) => ({ ...currentItems, [tokenKey]: count - 1 }));
         totalItemCountRef.current -= 1;
         return KeyToToken(tokenKey);
       }
@@ -77,9 +79,24 @@ export const useBag = (initialItems?: BagItems): BagApi => {
 
   const add = useCallback((token: Token, count: number = 1) => {
     const tokenKey = TokenToKey(token);
-    setItems((currentItems) => ({ ...currentItems, [tokenKey]: (currentItems[tokenKey] ?? 0) + count }));
+    setItemsInternal((currentItems) => ({ ...currentItems, [tokenKey]: (currentItems[tokenKey] ?? 0) + count }));
     totalItemCountRef.current += count;
   }, []);
 
-  return { add, maybePick, pickOrThrow, totalItemCount: totalItemCountRef.current };
+  const setItems = useCallback((newItems: BagItems) => {
+    const newItemsMap = bagItemsToMap(newItems);
+    setItemsInternal(newItemsMap);
+    totalItemCountRef.current = sumWeights(newItemsMap);
+  }, []);
+
+  return useMemo(
+    () => ({
+      add,
+      maybePick,
+      pickOrThrow,
+      totalItemCount: totalItemCountRef.current,
+      setItems,
+    }),
+    [add, maybePick, pickOrThrow, setItems],
+  );
 };
