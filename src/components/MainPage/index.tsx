@@ -1,35 +1,19 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import styled from "@emotion/styled";
 import Button from "../Button";
 import { GameContext } from "../GameProvider";
+import DrawnToken from "../DrawnToken";
 
 function MainPage() {
   const { draw, putDrawnBack, bagTotalItemCount, drawnTokens, resetGame } = useContext(GameContext);
+  const lastFiveTokens = useMemo(() => drawnTokens.slice(-5), [drawnTokens]);
 
   return (
     <Wrapper>
       <CurrentDrawStage>
-        <ul>
-          {drawnTokens.map((token, i) => (
-            <li key={i}>
-              {token.color} {token.value}
-              <div
-                style={{
-                  display: "inline-block",
-                  width: "24px",
-                  height: "24px",
-                  backgroundColor: "red",
-                  textAlign: "center",
-                }}
-                onClick={() => {
-                  putDrawnBack(i);
-                }}
-              >
-                ×
-              </div>
-            </li>
-          ))}
-        </ul>
+        {lastFiveTokens.map((token, i) => (
+          <DrawnToken token={token} onRemove={() => putDrawnBack(i)} />
+        ))}
       </CurrentDrawStage>
       <PrimaryActions>
         <Button onClick={draw} isDisabled={bagTotalItemCount <= 0}>
@@ -62,7 +46,7 @@ const Wrapper = styled.div({
 });
 
 const CurrentDrawStage = styled.div({
-  height: "40%",
+  height: "350px",
 });
 
 const PrimaryActions = styled.div({
