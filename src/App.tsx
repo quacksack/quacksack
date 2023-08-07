@@ -1,16 +1,21 @@
-import React from 'react';
-import styled from '@emotion/styled/';
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ShoppingPage from "./components/ShoppingPage";
+import MainPage from "./components/MainPage";
 
 function App() {
-  return (
-    <Wrapper>
-      
-    </Wrapper>
-  );
-}
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <MainPage />,
+    },
+    {
+      path: "/shop",
+      element: <ShoppingPage />,
+    },
+  ]);
 
-const Wrapper = styled.div({
-  padding: "32px",
-})
+  return <RouterProvider router={router} />;
+}
 
 export default App;
