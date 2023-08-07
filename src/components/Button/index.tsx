@@ -17,6 +17,7 @@ export const BaseButton = styled.button({
   alignItems: "center",
   justifyContent: "center",
   appearance: "none",
+  padding: 0,
   [`&[disabled], &[aria-disabled="true"]`]: { opacity: "10%", filter: "grayscale(100%)" },
 });
 
@@ -27,6 +28,7 @@ export const ActionButton = styled.button<{ buttonStyle?: ButtonStyle }>(({ butt
     primary: "255, 238, 51",
   };
   return {
+    appearance: "none",
     padding: "12px",
     border: "1px solid black",
     borderRadius: "5px",

@@ -9,8 +9,8 @@ function ShoppingPage() {
   const { addToBag, bagTotalItemCount } = useContext(GameContext);
 
   return (
-    <Wrapper>
-      <h3>Shopping (Total count: {bagTotalItemCount})</h3>
+    <>
+      <h2>Shopping | Tokens: {bagTotalItemCount}</h2>
       <ShopArea>
         {ShopData.map(([color, values]) => {
           return (
@@ -23,16 +23,9 @@ function ShoppingPage() {
         })}
       </ShopArea>
       <Button to="/">Done</Button>
-    </Wrapper>
+    </>
   );
 }
-
-const Wrapper = styled.div({
-  display: "flex",
-  padding: "32px",
-  flexFlow: "column nowrap",
-  gap: "16px",
-});
 
 const ShopArea = styled.div({
   overflowY: "auto",

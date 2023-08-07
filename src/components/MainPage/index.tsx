@@ -6,7 +6,7 @@ import DrawnToken from "../DrawnToken";
 import array from "../../util/array";
 
 function MainPage() {
-  const { draw, putDrawnBack, bagTotalItemCount, drawnTokens, resetGame } = useContext(GameContext);
+  const { draw, putDrawnBack, bagTotalItemCount, drawnTokens, resetGame, whiteTotal } = useContext(GameContext);
 
   const renderedDrawnTokens = useMemo(
     () =>
@@ -19,9 +19,10 @@ function MainPage() {
   );
 
   return (
-    <Wrapper>
+    <>
       <HeaderFooter>
-        <span>Tokens: {bagTotalItemCount}</span>
+        <h2>Tokens: {bagTotalItemCount}</h2>
+        <h2>White total: {whiteTotal}</h2>
       </HeaderFooter>
       <CurrentDrawStage>{renderedDrawnTokens}</CurrentDrawStage>
       <PrimaryActions>
@@ -30,7 +31,7 @@ function MainPage() {
         </Button>
         <Button to="/shop">Shopping</Button>
         <Button onClick={() => putDrawnBack("all")} isDisabled={drawnTokens.length <= 0}>
-          <span style={{ fontSize: "50px" }}>Put all back</span>
+          <span style={{ fontSize: "48px" }}>Put all back</span>
         </Button>
       </PrimaryActions>
       <HeaderFooter>
@@ -40,22 +41,15 @@ function MainPage() {
           </Button>
         </span>
       </HeaderFooter>
-    </Wrapper>
+    </>
   );
 }
 
-const Wrapper = styled.div({
-  display: "flex",
-  flexFlow: "column nowrap",
-  justifyContent: "space-between",
-  padding: "32px",
-  height: "100%",
-  maxWidth: "540px",
-  gap: "16px",
-});
-
 const CurrentDrawStage = styled.div({
-  height: "320px",
+  flex: "1 0 auto",
+  display: "flex",
+  flexFlow: "row nowrap",
+  width: "100%",
 });
 
 const PrimaryActions = styled.div({

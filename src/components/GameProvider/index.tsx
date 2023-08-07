@@ -11,16 +11,19 @@ export const GameContext = createContext<GameContextType>({
   bagTotalItemCount: 0,
   resetGame: () => {},
   addToBag: () => {},
+  whiteTotal: 0,
 });
 GameContext.displayName = "GameContext";
 
 const GameProvider = (props: { children: React.ReactNode }) => {
   const bag = useBag(DefaultBag);
   const [drawnTokens, setDrawnTokens] = useState<ReadonlyArray<Token>>([]);
+  const [whiteTotal, setWhiteTotal] = useState<number>(0);
 
   const draw = useCallback(() => {
     const token = bag.pickOrThrow();
     setDrawnTokens((current) => [...current, token]);
+    setWhiteTotal((current) => (token.color === "white" ? current + token.value : current));
   }, [bag]);
 
   const putDrawnBack = useCallback(
@@ -33,11 +36,12 @@ const GameProvider = (props: { children: React.ReactNode }) => {
         }
 
         bag.add(removed);
-
         setDrawnTokens(copy);
+        setWhiteTotal((current) => (removed.color === "white" ? current - removed.value : current));
       } else {
         drawnTokens.forEach((token) => bag.add(token));
         setDrawnTokens([]);
+        setWhiteTotal(0);
       }
     },
     [bag, drawnTokens],
@@ -46,11 +50,20 @@ const GameProvider = (props: { children: React.ReactNode }) => {
   const resetGame = useCallback(() => {
     setDrawnTokens([]);
     bag.setItems(DefaultBag);
+    setWhiteTotal(0);
   }, [bag]);
 
   const contextValue = useMemo(
-    () => ({ draw, drawnTokens, putDrawnBack, bagTotalItemCount: bag.totalItemCount, resetGame, addToBag: bag.add }),
-    [bag.add, bag.totalItemCount, draw, drawnTokens, putDrawnBack, resetGame],
+    () => ({
+      draw,
+      drawnTokens,
+      putDrawnBack,
+      bagTotalItemCount: bag.totalItemCount,
+      resetGame,
+      addToBag: bag.add,
+      whiteTotal,
+    }),
+    [bag.add, bag.totalItemCount, draw, drawnTokens, putDrawnBack, resetGame, whiteTotal],
   );
   return <GameContext.Provider value={contextValue}>{props.children}</GameContext.Provider>;
 };
