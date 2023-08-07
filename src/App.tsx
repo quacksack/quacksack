@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ShoppingPage from "./components/ShoppingPage";
 import MainPage from "./components/MainPage";
 
 function App() {
+  const [counter, setCounter] = useState(0);
+  const increment = useCallback(() => {
+    console.log("incremented");
+    setCounter((c) => c + 1);
+  }, []);
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <MainPage />,
+      element: <MainPage counter={counter} />,
     },
     {
       path: "/shop",
-      element: <ShoppingPage />,
+      element: <ShoppingPage increment={increment} />,
     },
   ]);
 
