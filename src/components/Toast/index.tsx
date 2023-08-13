@@ -29,7 +29,9 @@ const Toast = ({ durationMilliseconds = 2500, text }: { durationMilliseconds?: n
   return (
     <Container style={{ opacity: isTimeoutComplete ? 0 : 1 }}>
       <ContentWrapper>
-        <Content onPointerDown={dismiss}>{text}</Content>
+        <Content onPointerDown={dismiss} style={{ pointerEvents: isTimeoutComplete ? "none" : "auto" }}>
+          {text}
+        </Content>
       </ContentWrapper>
     </Container>
   );
@@ -62,7 +64,6 @@ const Content = styled.div({
   border: `4px solid ${COLORS.foregroundPrimary}`,
   backgroundColor: COLORS.background,
   fontSize: "18px",
-  pointerEvents: "auto",
 });
 
 export default Toast;
