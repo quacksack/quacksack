@@ -42,6 +42,7 @@ const Wrapper = styled.div({
   gap: "16px",
   maxWidth: "540px",
   margin: "0 auto",
+  transition: "background 200ms",
 });
 
 export default App;

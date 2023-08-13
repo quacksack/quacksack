@@ -22,12 +22,12 @@ const Toast = ({ durationMilliseconds = 2500, text }: { durationMilliseconds?: n
     }
   }, [dismiss, dismissTimeout, durationMilliseconds, text]);
 
-  if (text === undefined || isTimeoutComplete) {
+  if (text === undefined) {
     return null;
   }
 
   return (
-    <Container>
+    <Container style={{ opacity: isTimeoutComplete ? 0 : 1 }}>
       <ContentWrapper>
         <Content onPointerDown={dismiss}>{text}</Content>
       </ContentWrapper>
@@ -47,6 +47,8 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 42070;
+  transition: opacity ease-out 150ms;
+  opacity: 0;
 `;
 
 const ContentWrapper = styled.div({

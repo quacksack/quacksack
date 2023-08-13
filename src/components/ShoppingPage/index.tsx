@@ -79,7 +79,12 @@ function ShoppingPage() {
           return (
             <ShopRow key={color}>
               {values.map((value) => (
-                <TokenIcon color={color} value={value} onClick={() => onTokenClick({ color, value })} />
+                <TokenIcon
+                  key={`${color}-${value}`}
+                  color={color}
+                  value={value}
+                  onClick={() => onTokenClick({ color, value })}
+                />
               ))}
             </ShopRow>
           );
