@@ -41,6 +41,13 @@ const bagItemsToMap = (items: BagItems | undefined) => {
   return bagMap;
 };
 
+const bagMapToBagItems = (items: { [key: TokenKey]: number }): ReadonlyArray<[Token, number]> => {
+  return Object.entries(items).map(([tokenKey, count]) => {
+    const token = keyToToken(tokenKey);
+    return [token, count];
+  });
+};
+
 export const useBag = (initialItems?: BagItems): BagApi => {
   const [items, setItemsInternal] = useState<{ [key: TokenKey]: number }>(() => bagItemsToMap(initialItems));
   const totalItemCountRef = useRef<number>(sumWeights(items));
@@ -113,7 +120,8 @@ export const useBag = (initialItems?: BagItems): BagApi => {
       totalItemCount: totalItemCountRef.current,
       setItems,
       maybeDelete: maybeDeleteToken,
+      items: bagMapToBagItems(items),
     }),
-    [add, maybeDeleteToken, maybePick, pickOrThrow, setItems],
+    [add, maybeDeleteToken, maybePick, pickOrThrow, setItems, items],
   );
 };

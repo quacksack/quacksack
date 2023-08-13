@@ -7,7 +7,8 @@ import array from "../../util/array";
 import HeaderFooter from "../HeaderFooter";
 
 function MainPage() {
-  const { draw, putDrawnBack, bagTotalItemCount, drawnTokens, resetGame, whiteTotal } = useContext(GameContext);
+  const { loadComplete, draw, putDrawnBack, bagTotalItemCount, drawnTokens, resetGame, whiteTotal } =
+    useContext(GameContext);
 
   const renderedDrawnTokens = useMemo(
     () =>
@@ -19,7 +20,7 @@ function MainPage() {
     [drawnTokens, putDrawnBack],
   );
 
-  return (
+  return !loadComplete ? null : (
     <>
       <HeaderFooter>
         <h2>Tokens: {bagTotalItemCount}</h2>

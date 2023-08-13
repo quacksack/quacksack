@@ -10,4 +10,5 @@ export interface BagApi {
   pickOrThrow: () => Token;
   totalItemCount: number;
   setItems: (items: BagItems) => void;
+  items: BagItems;
 }
