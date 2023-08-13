@@ -29,9 +29,10 @@ export const ActionButton = styled.button<{ buttonStyle?: ButtonStyle }>(({ butt
   };
   return {
     appearance: "none",
+    height: "58px",
     padding: "12px",
     border: "1px solid black",
-    borderRadius: "5px",
+    borderRadius: "4px",
     fontSize: "18px",
     fontWeight: "bold",
     color:

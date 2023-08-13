@@ -83,6 +83,22 @@ export const useBag = (initialItems?: BagItems): BagApi => {
     totalItemCountRef.current += count;
   }, []);
 
+  const maybeDeleteToken = useCallback(
+    (token: Token, count: number = 1) => {
+      const tokenKey = tokenToKey(token);
+      const currentCount = items[tokenKey] ?? 0;
+
+      if (currentCount >= count) {
+        setItemsInternal((currentItems) => ({ ...currentItems, [tokenKey]: (currentItems[tokenKey] ?? 0) - count }));
+        totalItemCountRef.current -= count;
+        return token;
+      } else {
+        return null;
+      }
+    },
+    [items],
+  );
+
   const setItems = useCallback((newItems: BagItems) => {
     const newItemsMap = bagItemsToMap(newItems);
     setItemsInternal(newItemsMap);
@@ -96,7 +112,8 @@ export const useBag = (initialItems?: BagItems): BagApi => {
       pickOrThrow,
       totalItemCount: totalItemCountRef.current,
       setItems,
+      maybeDelete: maybeDeleteToken,
     }),
-    [add, maybePick, pickOrThrow, setItems],
+    [add, maybeDeleteToken, maybePick, pickOrThrow, setItems],
   );
 };

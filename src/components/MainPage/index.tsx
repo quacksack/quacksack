@@ -4,6 +4,7 @@ import Button from "../Button";
 import { GameContext } from "../GameProvider";
 import DrawnToken from "../DrawnToken";
 import array from "../../util/array";
+import HeaderFooter from "../HeaderFooter";
 
 function MainPage() {
   const { draw, putDrawnBack, bagTotalItemCount, drawnTokens, resetGame, whiteTotal } = useContext(GameContext);
@@ -12,7 +13,7 @@ function MainPage() {
     () =>
       drawnTokens
         .map((token, i) =>
-          i > drawnTokens.length - 1 - 5 ? <DrawnToken token={token} onRemove={() => putDrawnBack(i)} /> : null,
+          i > drawnTokens.length - 1 - 5 ? <DrawnToken key={i} token={token} onRemove={() => putDrawnBack(i)} /> : null,
         )
         .filter(array.nonNullable),
     [drawnTokens, putDrawnBack],
@@ -57,13 +58,6 @@ const PrimaryActions = styled.div({
   flexFlow: "column nowrap",
   gap: "16px",
   flex: "0 1 auto",
-  justifyContent: "space-between",
-});
-
-const HeaderFooter = styled.div({
-  display: "flex",
-  flex: "0 1 auto",
-  alignItems: "center",
   justifyContent: "space-between",
 });
 

@@ -11,6 +11,7 @@ export const GameContext = createContext<GameContextType>({
   bagTotalItemCount: 0,
   resetGame: () => {},
   addToBag: () => {},
+  deleteFromBag: () => null,
   whiteTotal: 0,
 });
 GameContext.displayName = "GameContext";
@@ -62,8 +63,9 @@ const GameProvider = (props: { children: React.ReactNode }) => {
       resetGame,
       addToBag: bag.add,
       whiteTotal,
+      deleteFromBag: bag.maybeDelete,
     }),
-    [bag.add, bag.totalItemCount, draw, drawnTokens, putDrawnBack, resetGame, whiteTotal],
+    [bag.add, bag.maybeDelete, bag.totalItemCount, draw, drawnTokens, putDrawnBack, resetGame, whiteTotal],
   );
   return <GameContext.Provider value={contextValue}>{props.children}</GameContext.Provider>;
 };

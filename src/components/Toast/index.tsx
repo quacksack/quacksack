@@ -27,13 +27,14 @@ const Toast = ({ durationMilliseconds = 2500, text }: { durationMilliseconds?: n
   }
 
   return (
-    <Container onClick={dismiss}>
-      <Content onClick={dismiss}>{text}</Content>
+    <Container>
+      <Content onPointerDown={dismiss}>{text}</Content>
     </Container>
   );
 };
 
 const Container = styled.div`
+  pointer-events: none;
   position: absolute;
   top: 0;
   left: 0;
@@ -55,6 +56,7 @@ const Content = styled.div({
   border: `4px solid ${COLORS.foregroundPrimary}`,
   backgroundColor: COLORS.background,
   fontSize: "18px",
+  pointerEvents: "auto",
 });
 
 export default Toast;

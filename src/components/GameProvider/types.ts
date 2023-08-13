@@ -8,6 +8,7 @@ export interface GameContextType {
   bagTotalItemCount: BagApi["totalItemCount"];
   resetGame: () => void;
   addToBag: (token: Token) => void;
+  deleteFromBag: (token: Token) => Token | null;
   whiteTotal: number;
 }
 

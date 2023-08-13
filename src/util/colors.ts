@@ -34,7 +34,7 @@ const COLORS = {
     red: "#ffffff",
     orange: "#000000",
     yellow: "#000000",
-    green: "#ffffff",
+    green: "#000000",
     blue: "#ffffff",
     purple: "#ffffff",
     black: "#ffffff",
