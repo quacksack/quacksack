@@ -28,7 +28,9 @@ const Toast = ({ durationMilliseconds = 2500, text }: { durationMilliseconds?: n
 
   return (
     <Container>
-      <Content onPointerDown={dismiss}>{text}</Content>
+      <ContentWrapper>
+        <Content onPointerDown={dismiss}>{text}</Content>
+      </ContentWrapper>
     </Container>
   );
 };
@@ -40,7 +42,6 @@ const Container = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  padding: 8px;
   display: flex;
   overflow: hidden;
   justify-content: center;
@@ -48,10 +49,13 @@ const Container = styled.div`
   z-index: 42070;
 `;
 
+const ContentWrapper = styled.div({
+  width: "calc(min(100%, 540px))",
+});
+
 const Content = styled.div({
   color: COLORS.foregroundPrimary,
   width: "100%",
-  maxWidth: "540px",
   padding: "16px",
   border: `4px solid ${COLORS.foregroundPrimary}`,
   backgroundColor: COLORS.background,

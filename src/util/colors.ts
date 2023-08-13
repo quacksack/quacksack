@@ -7,6 +7,8 @@ const COLORS = {
   background: "#404247",
   // background used for items on top of background e.g. buttons
   backgroundPrimary: "#626262",
+  // background for danger (deleting tokens)
+  backgroundDanger: "#a11637",
 
   backgroundTypeActive: "#002e5f",
   backgroundTypeInstant: "#28581b",

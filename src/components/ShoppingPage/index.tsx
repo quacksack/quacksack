@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import Button from "../Button";
 import { ShopData } from "../../gameData";
@@ -10,6 +10,7 @@ import HeaderFooter from "../HeaderFooter";
 import trashCanIconSrc from "./icons/trash-can.png";
 import addToCartIconSrc from "./icons/add-to-cart.png";
 import InvertedImg from "../InvertedImg";
+import { AppContext } from "../../AppContext";
 
 function PurchasedToast(token: Token, inDeleteMode: boolean) {
   return (
@@ -22,6 +23,7 @@ function PurchasedToast(token: Token, inDeleteMode: boolean) {
 
 function ShoppingPage() {
   const { addToBag, deleteFromBag, bagTotalItemCount } = useContext(GameContext);
+  const { setAppInputTheme } = useContext(AppContext);
   const [inDeleteMode, setDeleteMode] = useState<boolean>(false);
   const [toastText, setToastText] = useState<React.ReactNode>();
 
@@ -47,10 +49,16 @@ function ShoppingPage() {
     [addToBag, deleteFromBag, inDeleteMode, showPurchasedToast],
   );
 
-  const changeDeleteMode = useCallback((newValue: boolean) => {
-    setDeleteMode(newValue);
-    setToastText(<div style={{ textAlign: "center" }}>{newValue ? "Delete mode" : "Shopping mode"}</div>);
-  }, []);
+  const changeDeleteMode = useCallback(
+    (newValue: boolean) => {
+      setDeleteMode(newValue);
+      setAppInputTheme(newValue ? "DANGER" : undefined);
+      setToastText(<div style={{ textAlign: "center" }}>{newValue ? "Delete mode" : "Shopping mode"}</div>);
+    },
+    [setAppInputTheme],
+  );
+
+  useEffect(() => () => setAppInputTheme(undefined), [setAppInputTheme]);
 
   return (
     <>
@@ -66,7 +74,7 @@ function ShoppingPage() {
           </Button>
         )}
       </HeaderFooter>
-      <ShopArea style={{ background: inDeleteMode ? "#a11637" : "none" }}>
+      <ShopArea>
         {ShopData.map(([color, values]) => {
           return (
             <ShopRow key={color}>

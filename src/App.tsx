@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ShoppingPage from "./components/ShoppingPage";
 import MainPage from "./components/MainPage";
 import GameProvider from "./components/GameProvider";
 import styled from "@emotion/styled";
 import "normalize.css";
+import { AppContext, AppInputTheme } from "./AppContext";
+import COLORS from "./util/colors";
 
 function App() {
   const router = createBrowserRouter([
@@ -18,12 +20,16 @@ function App() {
     },
   ]);
 
+  const [appInputTheme, setAppInputTheme] = useState<AppInputTheme>();
+
   return (
-    <GameProvider>
-      <Wrapper>
-        <RouterProvider router={router} />
-      </Wrapper>
-    </GameProvider>
+    <AppContext.Provider value={{ setAppInputTheme }}>
+      <GameProvider>
+        <Wrapper style={{ backgroundColor: appInputTheme === "DANGER" ? COLORS.backgroundDanger : undefined }}>
+          <RouterProvider router={router} />
+        </Wrapper>
+      </GameProvider>
+    </AppContext.Provider>
   );
 }
 
