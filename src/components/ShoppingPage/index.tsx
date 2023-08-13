@@ -1,12 +1,34 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import styled from "@emotion/styled";
 import Button from "../Button";
 import { ShopData } from "../../gameData";
 import TokenIcon from "../TokenIcon";
 import { GameContext } from "../GameProvider";
+import Toast from "../Toast";
+import { Token } from "../../types";
+
+function PurchasedToast(token: Token) {
+  return (
+    <div style={{ display: "flex", alignContent: "center", justifyContent: "center", gap: "8px" }}>
+      <strong>Purchased</strong>
+      <TokenIcon color={token.color} value={token.value} size={24} />
+    </div>
+  );
+}
 
 function ShoppingPage() {
   const { addToBag, bagTotalItemCount } = useContext(GameContext);
+  const [toastText, setToastText] = useState<React.ReactNode>();
+
+  const showPurchasedToast = useCallback((token: Token) => setToastText(PurchasedToast(token)), []);
+
+  const onTokenClick = useCallback(
+    (token: Token) => {
+      showPurchasedToast(token);
+      addToBag(token);
+    },
+    [addToBag, showPurchasedToast],
+  );
 
   return (
     <>
@@ -16,11 +38,12 @@ function ShoppingPage() {
           return (
             <ShopRow key={color}>
               {values.map((value) => (
-                <TokenIcon color={color} value={value} onClick={() => addToBag({ color, value })} />
+                <TokenIcon color={color} value={value} onClick={() => onTokenClick({ color, value })} />
               ))}
             </ShopRow>
           );
         })}
+        <Toast durationMilliseconds={500} text={toastText} />
       </ShopArea>
       <Button to="/">Done</Button>
     </>

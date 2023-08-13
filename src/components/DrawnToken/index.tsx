@@ -8,7 +8,7 @@ import undoIconSrc from "./undo-circular-arrow.png";
 const DrawnToken = function ({ token, onRemove }: { token: Token; onRemove: () => void }) {
   return (
     <Wrapper>
-      <TokenIcon color={token.color} value={token.value} size="56px" />
+      <TokenIcon color={token.color} value={token.value} size={56} />
       <Button onClick={onRemove} buttonStyle="danger" buttonType="action">
         <img src={undoIconSrc} style={{ filter: "brightness(0) invert(1)" }} alt="Back to bag" width="32px" />
       </Button>
