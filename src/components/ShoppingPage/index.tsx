@@ -11,6 +11,7 @@ import trashCanIconSrc from "./icons/trash-can.png";
 import addToCartIconSrc from "./icons/add-to-cart.png";
 import InvertedImg from "../InvertedImg";
 import { AppContext } from "../../AppContext";
+import { MaxTokenCount } from "../useBag/types";
 
 function PurchasedToast(token: Token, inDeleteMode: boolean) {
   return (
@@ -35,8 +36,12 @@ function ShoppingPage() {
   const onTokenClick = useCallback(
     (token: Token) => {
       if (!inDeleteMode) {
-        addToBag(token);
-        showPurchasedToast(token, inDeleteMode);
+        if (bagTotalItemCount < MaxTokenCount) {
+          addToBag(token);
+          showPurchasedToast(token, inDeleteMode);
+        } else {
+          setToastText(<div style={{ textAlign: "center" }}>Max {MaxTokenCount} tokens</div>);
+        }
       } else {
         const success = deleteFromBag(token);
         if (success) {
@@ -46,7 +51,7 @@ function ShoppingPage() {
         }
       }
     },
-    [addToBag, deleteFromBag, inDeleteMode, showPurchasedToast],
+    [addToBag, bagTotalItemCount, deleteFromBag, inDeleteMode, showPurchasedToast],
   );
 
   const changeDeleteMode = useCallback(

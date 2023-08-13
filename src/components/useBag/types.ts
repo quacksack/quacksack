@@ -3,6 +3,8 @@ import { Token } from "../../types";
 export class BagError extends Error {}
 export type BagItems = ReadonlyArray<[Token, number]>;
 
+export const MaxTokenCount = 100;
+
 export interface BagApi {
   add: (token: Token, count?: number) => void;
   maybeDelete: (token: Token, count?: number) => Token | null;

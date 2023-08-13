@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Token, isTokenColor, isTokenValue } from "../../types";
-import { BagApi, BagError, BagItems } from "./types";
+import { BagApi, BagError, BagItems, MaxTokenCount } from "./types";
 
 type TokenKey = string;
 
@@ -57,22 +57,18 @@ export const useBag = (initialItems?: BagItems): BagApi => {
       return null;
     }
 
+    // very naive but I don't need to be clever here
     const weightedIndex = Math.floor(Math.random() * totalItemCountRef.current);
-    let totalWeightCounted = 0;
-    for (const [tokenKey, count] of Object.entries(items)) {
-      if (count === 0) {
-        continue;
-      }
-      totalWeightCounted += count;
-
-      if (totalWeightCounted >= weightedIndex) {
-        setItemsInternal((currentItems) => ({ ...currentItems, [tokenKey]: count - 1 }));
-        totalItemCountRef.current -= 1;
-        return keyToToken(tokenKey);
-      }
+    const longArray = Object.entries(items).flatMap(([tokenKey, count]) =>
+      Array.from({ length: count }).map(() => tokenKey),
+    );
+    const chosenTokenKey = longArray[weightedIndex];
+    if (chosenTokenKey === undefined) {
+      return null;
     }
-
-    return null;
+    setItemsInternal((currentItems) => ({ ...currentItems, [chosenTokenKey]: currentItems[chosenTokenKey]! - 1 }));
+    totalItemCountRef.current -= 1;
+    return keyToToken(chosenTokenKey);
   }, [items]);
 
   const pickOrThrow = useCallback(() => {
@@ -85,6 +81,9 @@ export const useBag = (initialItems?: BagItems): BagApi => {
   }, [maybePick]);
 
   const add = useCallback((token: Token, count: number = 1) => {
+    if (totalItemCountRef.current + count > MaxTokenCount) {
+      throw new BagError(`Bag can't contain more than ${MaxTokenCount} tokens`);
+    }
     const tokenKey = tokenToKey(token);
     setItemsInternal((currentItems) => ({ ...currentItems, [tokenKey]: (currentItems[tokenKey] ?? 0) + count }));
     totalItemCountRef.current += count;
