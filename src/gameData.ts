@@ -1,7 +1,7 @@
 import { Token, TokenColor, TokenValue } from "./types";
 
 export const ShopData: ReadonlyArray<[TokenColor, ReadonlyArray<TokenValue>]> = [
-  ["orange", [1]],
+  ["orange", [1, 6]],
   ["green", [1, 2, 4]],
   ["blue", [1, 2, 4]],
   ["red", [1, 2, 4]],
