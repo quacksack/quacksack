@@ -8,6 +8,7 @@ export const ShopData: ReadonlyArray<[TokenColor, ReadonlyArray<TokenValue>]> = 
   ["black", [1]],
   ["yellow", [1, 2, 4]],
   ["purple", [1]],
+  ["dark green", [0]],
   ["white", [1, 2, 3]],
 ];
 

@@ -29,6 +29,7 @@ const COLORS = {
     blue: "#0022ab",
     purple: "#9300c4",
     black: "#15151c",
+    "dark green": "#305c3e",
   } satisfies Record<TokenColor, string>,
 
   tokenForeground: {
@@ -40,6 +41,7 @@ const COLORS = {
     blue: "#ffffff",
     purple: "#ffffff",
     black: "#ffffff",
+    "dark green": "#ffffff",
   } satisfies Record<TokenColor, string>,
 };
 
