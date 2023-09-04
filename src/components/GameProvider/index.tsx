@@ -13,7 +13,6 @@ export const GameContext = createContext<GameContextType>({
   resetGame: () => {},
   addToBag: () => {},
   deleteFromBag: () => null,
-  whiteTotal: 0,
   loadComplete: false,
 });
 GameContext.displayName = "GameContext";
@@ -21,14 +20,12 @@ GameContext.displayName = "GameContext";
 const GameProvider = (props: { children: React.ReactNode }) => {
   const bag = useBag(DefaultBag);
   const [drawnTokens, setDrawnTokens] = useState<ReadonlyArray<Token>>([]);
-  const [whiteTotal, setWhiteTotal] = useState<number>(0);
 
   const [hasAttemptedLoad, setHasAttemptedLoad] = useState<boolean>(false);
 
   const draw = useCallback(() => {
     const token = bag.pickOrThrow();
     setDrawnTokens((current) => [...current, token]);
-    setWhiteTotal((current) => (token.color === "white" ? current + token.value : current));
   }, [bag]);
 
   const putDrawnBack = useCallback(
@@ -42,11 +39,9 @@ const GameProvider = (props: { children: React.ReactNode }) => {
 
         bag.add(removed);
         setDrawnTokens(copy);
-        setWhiteTotal((current) => (removed.color === "white" ? current - removed.value : current));
       } else {
         drawnTokens.forEach((token) => bag.add(token));
         setDrawnTokens([]);
-        setWhiteTotal(0);
       }
     },
     [bag, drawnTokens],
@@ -55,7 +50,6 @@ const GameProvider = (props: { children: React.ReactNode }) => {
   const resetGame = useCallback(() => {
     setDrawnTokens([]);
     bag.setItems(DefaultBag);
-    setWhiteTotal(0);
   }, [bag]);
 
   const bagRef = useRef(bag);
@@ -85,21 +79,10 @@ const GameProvider = (props: { children: React.ReactNode }) => {
       bagTotalItemCount: bag.totalItemCount,
       resetGame,
       addToBag: bag.add,
-      whiteTotal,
       deleteFromBag: bag.maybeDelete,
       loadComplete: hasAttemptedLoad,
     }),
-    [
-      bag.add,
-      bag.maybeDelete,
-      bag.totalItemCount,
-      draw,
-      drawnTokens,
-      hasAttemptedLoad,
-      putDrawnBack,
-      resetGame,
-      whiteTotal,
-    ],
+    [bag.add, bag.maybeDelete, bag.totalItemCount, draw, drawnTokens, hasAttemptedLoad, putDrawnBack, resetGame],
   );
 
   return <GameContext.Provider value={contextValue}>{props.children}</GameContext.Provider>;

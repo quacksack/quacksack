@@ -24,6 +24,7 @@ const Wrapper = styled.div({
   justifyContent: "center",
   gap: "16px",
   width: "20%",
+  flex: "0 1",
 });
 
 export default DrawnToken;

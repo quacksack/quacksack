@@ -9,7 +9,6 @@ export interface GameContextType {
   resetGame: () => void;
   addToBag: (token: Token) => void;
   deleteFromBag: (token: Token) => Token | null;
-  whiteTotal: number;
   loadComplete: boolean;
 }
 
