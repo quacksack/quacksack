@@ -7,8 +7,8 @@ import { GameContext } from "../GameProvider";
 import Toast from "../Toast";
 import { Token } from "../../types";
 import HeaderFooter from "../HeaderFooter";
-import trashCanIconSrc from "./icons/trash-can.png";
-import addToCartIconSrc from "./icons/add-to-cart.png";
+import trashCanIconSrc from "../../icons/trash-can.png";
+import addToCartIconSrc from "../../icons/add-to-cart.png";
 import InvertedImg from "../InvertedImg";
 import { AppContext } from "../../AppContext";
 import { MaxTokenCount } from "../useBag/types";
@@ -69,15 +69,20 @@ function ShoppingPage() {
     <>
       <HeaderFooter>
         <h2>Tokens: {bagTotalItemCount}</h2>
-        {!inDeleteMode ? (
-          <Button onClick={() => changeDeleteMode(true)} buttonStyle="danger" buttonType="action">
-            <InvertedImg src={trashCanIconSrc} alt="Delete mode" width="32px" />
+        <div style={{ display: "flex", gap: "8px" }}>
+          <Button buttonType="action" to="/history">
+            History
           </Button>
-        ) : (
-          <Button onClick={() => changeDeleteMode(false)} buttonType="action">
-            <InvertedImg src={addToCartIconSrc} alt="Shopping mode" width="32px" />
-          </Button>
-        )}
+          {!inDeleteMode ? (
+            <Button onClick={() => changeDeleteMode(true)} buttonStyle="danger" buttonType="action">
+              <InvertedImg src={trashCanIconSrc} alt="Delete mode" width="32px" />
+            </Button>
+          ) : (
+            <Button onClick={() => changeDeleteMode(false)} buttonType="action">
+              <InvertedImg src={addToCartIconSrc} alt="Shopping mode" width="32px" />
+            </Button>
+          )}
+        </div>
       </HeaderFooter>
       <ShopArea>
         {ShopData.map(([color, values]) => {

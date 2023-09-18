@@ -40,7 +40,7 @@ export const ActionButton = styled.button<{ buttonStyle?: ButtonStyle }>(({ butt
         ? COLORS.backgroundBase
         : buttonStyle === "danger"
         ? COLORS.foregroundBase
-        : COLORS.foregroundPrimary,
+        : COLORS.foregroundBase,
     backgroundColor: `rgb(${rgbMap[buttonStyle]})`,
     "&:active": { filter: "brightness(0.7)" },
     [`&[disabled], &[aria-disabled="true"]`]: { opacity: "10%", filter: "grayscale(100%)" },

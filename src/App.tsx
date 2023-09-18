@@ -7,6 +7,7 @@ import styled from "@emotion/styled";
 import "normalize.css";
 import { AppContext, AppInputTheme } from "./AppContext";
 import COLORS from "./util/colors";
+import HistoryPage from "./components/HistoryPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -17,6 +18,10 @@ function App() {
     {
       path: "/shop",
       element: <ShoppingPage />,
+    },
+    {
+      path: "/history",
+      element: <HistoryPage />,
     },
   ]);
 

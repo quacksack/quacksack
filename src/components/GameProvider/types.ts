@@ -1,5 +1,5 @@
 import { Token } from "../../types";
-import { BagApi, BagItems } from "../useBag/types";
+import { BagApi, BagItems, BagOperationHistory } from "../useBag/types";
 
 export interface GameContextType {
   draw: () => void;
@@ -10,6 +10,7 @@ export interface GameContextType {
   addToBag: (token: Token) => void;
   deleteFromBag: (token: Token) => Token | null;
   loadComplete: boolean;
+  bagOperationHistory: BagOperationHistory;
 }
 
 export type GameState = {
