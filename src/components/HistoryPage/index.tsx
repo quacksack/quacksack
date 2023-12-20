@@ -2,16 +2,16 @@ import COLORS from "../../util/colors";
 import InvertedImg from "../InvertedImg";
 import trashCanIconSrc from "../../icons/trash-can.png";
 import addToCartIconSrc from "../../icons/add-to-cart.png";
-import { BagOperation } from "../useBag/types";
 import HeaderFooter from "../HeaderFooter";
 import styled from "@emotion/styled";
 import { useContext } from "react";
 import { GameContext } from "../GameProvider";
 import TokenIcon from "../TokenIcon";
 import Button from "../Button";
+import { ShoppingOperation } from "../GameProvider/types";
 
 function HistoryPage() {
-  const { bagOperationHistory } = useContext(GameContext);
+  const { shoppingOperationHistory } = useContext(GameContext);
   return (
     <>
       <HeaderFooter>
@@ -21,9 +21,9 @@ function HistoryPage() {
         </Button>
       </HeaderFooter>
       <HistorySections>
-        {Array.from({ length: bagOperationHistory.length }).map((_, i) => {
+        {Array.from({ length: shoppingOperationHistory.length }).map((_, i) => {
           // Effectively reversing the array
-          const section = bagOperationHistory[bagOperationHistory.length - 1 - i];
+          const section = shoppingOperationHistory[shoppingOperationHistory.length - 1 - i];
           if (section === undefined) {
             throw new Error("invariant: section is undefined");
           }
@@ -47,20 +47,20 @@ function HistoryPage() {
   );
 }
 
-function OperationIcon({ operationType }: { operationType: BagOperation["operationType"] }) {
+function OperationIcon({ operationType }: { operationType: ShoppingOperation["operationType"] }) {
   return (
     <div
       style={{
         width: 48,
         height: 48,
-        backgroundColor: operationType === "remove" ? COLORS.backgroundDanger : COLORS.backgroundPrimary,
+        backgroundColor: operationType === "delete" ? COLORS.backgroundDanger : COLORS.backgroundPrimary,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
       }}
     >
-      {operationType === "remove" ? (
-        <InvertedImg src={trashCanIconSrc} alt="Remove" width="32px" />
+      {operationType === "delete" ? (
+        <InvertedImg src={trashCanIconSrc} alt="Delete" width="32px" />
       ) : (
         <InvertedImg src={addToCartIconSrc} alt="Added" width="32px" />
       )}

@@ -1,9 +1,11 @@
-import { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useEffect, useMemo, useState } from "react";
 import { Token } from "../../types";
 import { useBag } from "../useBag";
-import { GameContextType } from "./types";
+import { GameContextType, ShoppingOperation } from "./types";
 import { DefaultBag } from "../../gameData";
 import { loadFromLocalStorage, saveToLocalStorage } from "./persist";
+import { useOperationHistory } from "../useOperationHistory";
+import { useMount } from "../useMount/useMount";
 
 export const GameContext = createContext<GameContextType>({
   draw: () => {},
@@ -14,12 +16,15 @@ export const GameContext = createContext<GameContextType>({
   addToBag: () => {},
   deleteFromBag: () => null,
   loadComplete: false,
-  bagOperationHistory: [],
+  shoppingOperationHistory: [],
+  recordShoppingOperationHistory: () => {},
+  resetShoppingOperationHistory: () => {},
 });
 GameContext.displayName = "GameContext";
 
 const GameProvider = (props: { children: React.ReactNode }) => {
   const bag = useBag(DefaultBag);
+  const { operationHistory, recordOperationHistory, resetHistory } = useOperationHistory<ShoppingOperation>();
   const [drawnTokens, setDrawnTokens] = useState<ReadonlyArray<Token>>([]);
 
   const [hasAttemptedLoad, setHasAttemptedLoad] = useState<boolean>(false);
@@ -49,22 +54,22 @@ const GameProvider = (props: { children: React.ReactNode }) => {
   );
 
   const resetGame = useCallback(() => {
-    setDrawnTokens([]);
     bag.setItems(DefaultBag);
-  }, [bag]);
+    setDrawnTokens([]);
+    resetHistory();
+  }, [bag, resetHistory]);
 
-  const bagRef = useRef(bag);
-  bagRef.current = bag;
-
-  useEffect(() => {
+  useMount(() => {
     const existingState = loadFromLocalStorage();
+
     if (existingState !== null) {
-      bagRef.current.setItems(existingState.bagItems);
+      bag.setItems(existingState.bagItems);
       setDrawnTokens(existingState.drawnTokens);
+      resetHistory();
     }
 
     setHasAttemptedLoad(true);
-  }, []);
+  });
 
   useEffect(() => {
     if (hasAttemptedLoad) {
@@ -82,18 +87,22 @@ const GameProvider = (props: { children: React.ReactNode }) => {
       addToBag: bag.add,
       deleteFromBag: bag.maybeDelete,
       loadComplete: hasAttemptedLoad,
-      bagOperationHistory: bag.operationHistory,
+      shoppingOperationHistory: operationHistory,
+      recordShoppingOperationHistory: recordOperationHistory,
+      resetShoppingOperationHistory: resetHistory,
     }),
     [
       bag.add,
       bag.maybeDelete,
-      bag.operationHistory,
       bag.totalItemCount,
       draw,
       drawnTokens,
       hasAttemptedLoad,
+      operationHistory,
       putDrawnBack,
+      recordOperationHistory,
       resetGame,
+      resetHistory,
     ],
   );
 

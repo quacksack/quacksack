@@ -23,7 +23,7 @@ function PurchasedToast(token: Token, inDeleteMode: boolean) {
 }
 
 function ShoppingPage() {
-  const { addToBag, deleteFromBag, bagTotalItemCount } = useContext(GameContext);
+  const { addToBag, deleteFromBag, bagTotalItemCount, recordShoppingOperationHistory } = useContext(GameContext);
   const { setAppInputTheme } = useContext(AppContext);
   const [inDeleteMode, setDeleteMode] = useState<boolean>(false);
   const [toastText, setToastText] = useState<React.ReactNode>();
@@ -39,6 +39,7 @@ function ShoppingPage() {
         if (bagTotalItemCount < MaxTokenCount) {
           addToBag(token);
           showPurchasedToast(token, inDeleteMode);
+          recordShoppingOperationHistory({ operationType: "add", token });
         } else {
           setToastText(<div style={{ textAlign: "center" }}>Max {MaxTokenCount} tokens</div>);
         }
@@ -46,12 +47,13 @@ function ShoppingPage() {
         const success = deleteFromBag(token);
         if (success) {
           showPurchasedToast(token, inDeleteMode);
+          recordShoppingOperationHistory({ operationType: "delete", token });
         } else {
           setToastText(<div style={{ textAlign: "center" }}>None in bag</div>);
         }
       }
     },
-    [addToBag, bagTotalItemCount, deleteFromBag, inDeleteMode, showPurchasedToast],
+    [addToBag, bagTotalItemCount, deleteFromBag, inDeleteMode, recordShoppingOperationHistory, showPurchasedToast],
   );
 
   const changeDeleteMode = useCallback(
